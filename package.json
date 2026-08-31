@@ -1,7 +1,7 @@
 {
   "name": "zai-coding-plan-proxy-workers",
   "version": "0.0.0",
-  "private": true,
+  "type": "module",
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
@@ -24,5 +24,6 @@
     "typescript": "^7.0.2",
     "vitest": "~4.1.0",
     "wrangler": "^4.127.1"
-  }
+  },
+  "packageManager": "pnpm@11.24.0"
 }

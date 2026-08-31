@@ -1,5 +1,6 @@
 import type { Configuration } from "lint-staged"
 
 export default {
-  "*.{ts,tsx,json,jsonc,md}": ["oxfmt", "oxlint --fix"],
+  "*.{ts,tsx}": ["oxfmt", "oxlint --fix"],
+  "*.{json,jsonc,md}": ["oxfmt"],
 } satisfies Configuration
