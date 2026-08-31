@@ -15,20 +15,21 @@ app.get("/", async (c) => {
       <div class="max-w-xl space-y-4 text-slate-300">
         <h1 class="text-2xl font-semibold text-slate-100">zai-coding-plan-proxy-workers</h1>
         <p class="leading-relaxed">
-          使用方法:{" "}
+          Usage: Define a new custom provider at{" "}
           <a
             class="text-emerald-400 underline underline-offset-2"
             href="https://dash.cloudflare.com/?to=/:account/ai/ai-gateway/custom-providers"
           >
             https://dash.cloudflare.com/?to=/:account/ai/ai-gateway/custom-providers
           </a>{" "}
-          で新しいカスタムプロバイダーを定義し、{" "}
+          and set its URL to{" "}
           <span class="text-slate-100">
-            https://zai-coding-plan-proxy-workers.pycabbage.workers.dev/
-          </span>{" "}
-          をURLに指定する
+            https://zai-coding-plan-proxy-workers.pycabbage.workers.dev/api
+          </span>
         </p>
-        <p class="leading-relaxed">APIキーなどは全てAI Gateway側のものをパススルーする</p>
+        <p class="leading-relaxed">
+          API keys and other credentials are all passed through from the AI Gateway side
+        </p>
         <p>
           <a
             class="text-emerald-400 underline underline-offset-2"

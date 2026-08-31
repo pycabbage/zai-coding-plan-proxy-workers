@@ -2,29 +2,34 @@
 
 ## Core Concepts
 
-GLM Coding PlanをCloudflare OS → AI Gatewayで使用するとき、2つの問題がある。
+When using the GLM Coding Plan through Cloudflare AI Gateway's custom providers, there are two problems.
 
-### 1. モデルIDの不整合
+### 1. Model ID mismatch
 
-Cloudflare OSは入力されたモデルIDをfull lengthで扱うため、上流プロバイダーにprovider prefixが流れてしまう。
-そのため、上流プロバイダーは `"custom-zai/glm-5.3-flash"` というモデルIDを理解できない。
+Cloudflare AI Gateway forwards the model ID it receives at full length, so the provider prefix leaks through to the upstream provider.
+As a result, the upstream provider cannot understand a model ID such as `"custom-zai/glm-5.3-flash"`.
 
-### 2. パスの不整合
+### 2. Path mismatch
 
-Z.ai Coding Planの OpenAI Chat Completions 形式のbase URLは `https://api.z.ai/api/coding/paas/v4` であり、推論エンドポイントは `https://api.z.ai/api/coding/paas/v4/chat/completions` である。
-一方、Cloudflare OSは `/chat/completions` を利用する。
-AI Gatewayは `/chat/completions` へのリクエストを `/v1/chat/completions` に流すため、設定で解決できないパスの不整合が発生する。
+The base URL for the Z.ai Coding Plan's OpenAI Chat Completions format is `https://api.z.ai/api/coding/paas/v4`, and its inference endpoint is `https://api.z.ai/api/coding/paas/v4/chat/completions`.
+Cloudflare AI Gateway, on the other hand, uses `/chat/completions`.
+AI Gateway forwards requests to `/chat/completions` as `/v1/chat/completions`, which creates a path mismatch that cannot be resolved through configuration alone.
 
-| カスタムプロバイダーのbase URL | Z.ai Coding Planへのリクエスト | 結果 |
+| Custom provider base URL | Request to Z.ai Coding Plan | Result |
 | `https://api.z.ai/api/coding/paas` |`/v1/chat/completions` | `404 Not Found` |
 | `https://api.z.ai/api/coding/paas/v4` |`/v4/v1/chat/completions` | `404 Not Found` |
 
-### 解決策
+### Solution
 
-これらの問題を解決するため、このWorkerでは以下の2点を処理する。
+To resolve these issues, this Worker handles the following two things.
 
-1. provider suffixの除去: 1つ目の `/` までの文字列を除去する。
-2. パスの書き換え: `/api/v1/chat/completions` を `https://api.z.ai/api/coding/paas/v4/chat/completions` に書き換える。
+1. Strip the provider suffix: remove everything up to and including the first `/`.
+2. Rewrite the path: rewrite `/api/v1/chat/completions` to `https://api.z.ai/api/coding/paas/v4/chat/completions`.
 
-`.model` 以外のリクエストボディフィールド、およびヘッダーなど認証情報は全てパススルーされる。
-また `/api/anthropic` や `/api/v1` など `/api` 以下全てのリクエストは、処理[1]のみを適用しパススルーする。
+All request body fields other than `.model`, as well as authentication information such as headers, are passed through unchanged.
+Any request under `/api` other than the chat completions path (e.g. `/api/anthropic`, `/api/v1`) only has step [1] applied and is otherwise passed through as-is.
+
+## Usage
+
+1. Create a new [custom provider](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway/custom-providers).
+2. Set the custom provider's base URL to `https://zai-coding-plan-proxy-workers.pycabbage.workers.dev/api`.
