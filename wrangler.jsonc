@@ -9,6 +9,15 @@
   "compatibility_date": "2026-08-25",
   "observability": {
     "enabled": true,
+    "logs": {
+      "enabled": true,
+    },
+    "traces": {
+      "enabled": true,
+    },
+  },
+  "build": {
+    "command": "pnpm build",
   },
   "upload_source_maps": true,
   /**
