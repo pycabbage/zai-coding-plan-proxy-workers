@@ -5,7 +5,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "zai-coding-plan-proxy-workers",
-  "main": "src/index.ts",
+  "main": "src/index.tsx",
   "compatibility_date": "2026-08-25",
   "observability": {
     "enabled": true,

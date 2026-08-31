@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "pnpm build && vite preview",
+    "deploy": "pnpm build && wrangler deploy",
     "start": "wrangler dev",
     "test": "vitest",
     "cf-typegen": "wrangler types",
@@ -12,7 +14,9 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.54.2",
     "@cloudflare/vitest-plugin": "^1.0.0",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.4.0",
     "concurrently": "^10.0.5",
     "hono": "^4.13.5",
@@ -21,7 +25,10 @@
     "oxfmt": "^0.65.0",
     "oxlint": "^1.80.0",
     "oxlint-tsgolint": "^7.0.2001",
+    "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vite-ssr-components": "^0.6.1",
     "vitest": "~4.1.0",
     "wrangler": "^4.127.1"
   },
